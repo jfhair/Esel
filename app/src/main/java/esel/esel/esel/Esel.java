@@ -27,7 +27,7 @@ public class Esel extends Application {
         sResources = getResources();
 
         boolean use_patched_es = SP.getBoolean("use_patched_es", true);
-        if (!use_patched_es) {
+        if (use_patched_es) {
             startReadReceiver();
             startKeepAliveService();
         }
