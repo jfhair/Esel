@@ -86,7 +86,7 @@ public class EsNotificationListener extends NotificationListenerService {
             SGV oldSgv = lastReadings.get(lastReadings.size() - 1);
             long lastreadingtime = oldSgv.timestamp; // SP.getLong("lastreadingtime_nl",timestamp);
             int lastreadingvalue = oldSgv.raw; //SP.getInt("lastreadingvalue_nl",value);
-            if (value == lastreadingvalue && (lastreadingtime + (five_min * 1.02)) > timestamp ) { // no new value
+            if (value == lastreadingvalue && (lastreadingtime + (five_min * 1.05)) > timestamp ) { // no new value
                 return null;
             }
         }
