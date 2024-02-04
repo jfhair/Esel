@@ -64,14 +64,14 @@ public class MainActivity extends MenuActivity {
                 if (key.equals("use_patched_es")){
                     if (SP.getBoolean("use_patched_es", false)){
                         Esel.getsInstance().startKeepAliveService();
-                        EselLog.LogV(TAG, "START patches_ed keepAlive recievers");
+                        EselLog.LogV(TAG, "START patched_es keepAlive recievers");
                         Esel.getsInstance().startReadReceiver();
-                        EselLog.LogV(TAG, "START patches_ed Read recievers");
+                        EselLog.LogV(TAG, "START patched_es Read recievers");
                     } else {
                         Esel.getsInstance().stopReadReceiver();
-                        EselLog.LogV(TAG, "STOP patches_ed Read recievers");
+                        EselLog.LogV(TAG, "STOP patched_es Read recievers");
                         Esel.getsInstance().stopKeepAliveService();
-                        EselLog.LogV(TAG, "STOP patches_ed keepAlive recievers");
+                        EselLog.LogV(TAG, "STOP patched_es keepAlive recievers");
                     }
                 }
             }
