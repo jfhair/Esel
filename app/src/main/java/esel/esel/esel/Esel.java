@@ -28,8 +28,8 @@ public class Esel extends Application {
 
         boolean use_patched_es = SP.getBoolean("use_patched_es", false);
         if (use_patched_es) {
-            startReadReceiver();
             startKeepAliveService();
+            startReadReceiver();
         }
     }
 
@@ -61,7 +61,7 @@ public class Esel extends Application {
     }
 
 
-    public void startKeepAliveService() {
+    public synchronized void startKeepAliveService() {
         if (keepAliveReceiver == null) {
             keepAliveReceiver = new KeepAliveReceiver();
             keepAliveReceiver.setAlarm(this);
@@ -69,7 +69,7 @@ public class Esel extends Application {
     }
 
 
-    public void stopKeepAliveService() {
+    public synchronized void stopKeepAliveService() {
         if (keepAliveReceiver != null) {
             keepAliveReceiver.cancelAlarm(this);
         }
