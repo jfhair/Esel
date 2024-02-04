@@ -4,6 +4,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 
 import java.io.File;
 import java.util.List;
+import java.util.Objects;
 
 import esel.esel.esel.datareader.Datareader;
 import esel.esel.esel.datareader.EsNowDatareader;
@@ -56,6 +58,25 @@ public class MainActivity extends MenuActivity {
                         .setAction("Action", null).show();
             }
         });*/
+
+        SharedPreferences.OnSharedPreferenceChangeListener settingsListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+            @Override
+            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+                if (key.equals("use_patched_es")){
+                    if (SP.getBoolean("use_patched_es", false)){
+                        Esel.getsInstance().startKeepAliveService();
+                        Esel.getsInstance().startReadReceiver();
+                        EselLog.LogI(TAG, "started recievers for patched_es mode");
+                    } else {
+                        Esel.getsInstance().stopKeepAliveService();
+                        Esel.getsInstance().stopReadReceiver();
+                        EselLog.LogI(TAG, "stopped recievers for patched_es mode");
+                    }
+                }
+            }
+        };
+        SP.sharedPreferences.registerOnSharedPreferenceChangeListener(settingsListener);
+
         buttonReadValue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
