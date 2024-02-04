@@ -65,6 +65,8 @@ public class Esel extends Application {
         if (keepAliveReceiver == null) {
             keepAliveReceiver = new KeepAliveReceiver();
             keepAliveReceiver.setAlarm(this);
+        } else {
+            keepAliveReceiver.setAlarm(this);
         }
     }
 
@@ -72,6 +74,7 @@ public class Esel extends Application {
     public synchronized void stopKeepAliveService() {
         if (keepAliveReceiver != null) {
             keepAliveReceiver.cancelAlarm(this);
+            keepAliveReceiver = null;
         }
     }
 }
