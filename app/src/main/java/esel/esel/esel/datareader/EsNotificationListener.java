@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import esel.esel.esel.util.SP;
+import esel.esel.esel.receivers.ReadReceiver;
 
 /**
  * Created by bernhard on 24-01-18.
@@ -16,6 +17,7 @@ import esel.esel.esel.util.SP;
 public class EsNotificationListener extends NotificationListenerService {
 
     private static List<SGV> lastReadings = new ArrayList<SGV>();
+    private static final ReadReceiver rr = new ReadReceiver();
     
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
@@ -37,6 +39,10 @@ public class EsNotificationListener extends NotificationListenerService {
                 } catch (NumberFormatException err) {
                     err.printStackTrace();
                 }
+
+                long lastReadingTime = SP.getLong("lastReadingTime", System.currentTimeMillis());
+                rr.broadcastData(null, lastReadingTime, true);
+
             }
         }
 
@@ -80,7 +86,7 @@ public class EsNotificationListener extends NotificationListenerService {
             SGV oldSgv = lastReadings.get(lastReadings.size() - 1);
             long lastreadingtime = oldSgv.timestamp; // SP.getLong("lastreadingtime_nl",timestamp);
             int lastreadingvalue = oldSgv.raw; //SP.getInt("lastreadingvalue_nl",value);
-            if (value == lastreadingvalue && (lastreadingtime + (five_min * 1.05)) > timestamp ) { // no new value
+            if (value == lastreadingvalue && (lastreadingtime + (five_min * 1.1)) > timestamp ) { // no new value // 5 min 30 secs grace time
                 return null;
             }
         }
