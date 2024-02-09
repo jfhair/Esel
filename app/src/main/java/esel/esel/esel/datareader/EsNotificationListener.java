@@ -35,13 +35,13 @@ public class EsNotificationListener extends NotificationListenerService {
                    SGV sgv = generateSGV(notification,lastReadings.size());
                    if(sgv != null) {
                        lastReadings.add(sgv);
+                       rr.CallBroadcast(null);
                    }
                 } catch (NumberFormatException err) {
                     err.printStackTrace();
                 }
 
-                long lastReadingTime = SP.getLong("lastReadingTime", System.currentTimeMillis());
-                rr.broadcastData(null, lastReadingTime, true);
+
 
             }
         }

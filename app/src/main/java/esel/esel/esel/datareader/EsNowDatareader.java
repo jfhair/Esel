@@ -63,12 +63,8 @@ public final class EsNowDatareader {
 
     static public void updateLogin(){
         EsNowDatareader reader = new EsNowDatareader();
-
         if(reader.bearer_token == "" || reader.tokenHasExpired() ) {
             reader.login();
-        }
-        if(reader.userId == 0 ){
-            reader.currentUser();
         }
     }
 

@@ -23,7 +23,7 @@ public class LogActivity extends MenuActivity {
     }
     public static void addLog(String type,String tag, String value){
         String msg = SP.getString("logging","");
-        int lines_limit = 500;
+        int lines_limit = 800;
         String[] lines = msg.split("\n");
         if(lines.length>lines_limit){
             int limit_to = (int)(lines_limit * 0.7);

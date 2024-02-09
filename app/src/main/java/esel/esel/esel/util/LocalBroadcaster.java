@@ -28,7 +28,7 @@ public class LocalBroadcaster {
     private static final String TAG = "LocalBroadcaster";
     private static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.US);
 
-    public static void broadcast(SGV sgv) {
+    public static void broadcast(SGV sgv, boolean log) {
         try {
 
             int timeShift = SP.getInt("shift_days",0);
@@ -40,15 +40,16 @@ public class LocalBroadcaster {
             if (SP.getBoolean("send_to_AAPS", true)) {
                 final JSONArray entriesBody = new JSONArray();
                 addSgvEntry(entriesBody, sgv);
-                sendBundle("add", "entries", entriesBody, XDRIP_PLUS_NS_EMULATOR);
+                sendBundle("add", "entries", entriesBody, XDRIP_PLUS_NS_EMULATOR, log);
             }
 
             if (SP.getBoolean("send_to_NS", true)) {
-                sendBundle("dbAdd", "entries", generateSgvEntry(sgv), ACTION_DATABASE);
+                sendBundle("dbAdd", "entries", generateSgvEntry(sgv), ACTION_DATABASE, log);
             }
 
-            EselLog.LogI(TAG, String.valueOf(sgv.value) + " " + sgv.direction );
-
+            if(log) {
+                EselLog.LogI(TAG, String.valueOf(sgv.value) + " " + sgv.direction);
+            }
         } catch (Exception e) {
             String msg = "Unable to send bundle: " + e;
             EselLog.LogE(TAG,msg);
@@ -77,7 +78,7 @@ public class LocalBroadcaster {
         return json;
     }
 
-    private static void sendBundle(String action, String collection, Object json, String intentIdAction) {
+    private static void sendBundle(String action, String collection, Object json, String intentIdAction,boolean log) {
         final Bundle bundle = new Bundle();
         bundle.putString("action", action);
         bundle.putString("collection", collection);
@@ -94,7 +95,9 @@ public class LocalBroadcaster {
             if (packageName != null) {
                 intent.setPackage(packageName);
                 Esel.getsInstance().sendBroadcast(intent);
-                EselLog.LogI(TAG,"send to: " + packageName);
+                if(log) {
+                    EselLog.LogI(TAG, "send to: " + packageName);
+                }
             }
         }
     }
