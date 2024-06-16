@@ -6,6 +6,8 @@ import android.content.res.Resources;
 import esel.esel.esel.receivers.KeepAliveReceiver;
 import esel.esel.esel.receivers.ReadReceiver;
 
+import esel.esel.esel.util.SP;
+
 /**
  * Created by adrian on 04/08/17.
  */
@@ -23,8 +25,12 @@ public class Esel extends Application {
         super.onCreate();
         sInstance = this;
         sResources = getResources();
-        startReadReceiver();
-        startKeepAliveService();
+
+        boolean use_patched_es = SP.getBoolean("use_patched_es", false);
+        if (use_patched_es) {
+            startKeepAliveService();
+            startReadReceiver();
+        }
     }
 
     public static Esel getsInstance() {
@@ -48,23 +54,27 @@ public class Esel extends Application {
 
 
     public synchronized void stopReadReceiver() {
-        if (readReceiver != null)
+        if (readReceiver != null) {
             readReceiver.cancelAlarm(this);
             readReceiver = null;
+        }
     }
 
 
-    private void startKeepAliveService() {
+    public synchronized void startKeepAliveService() {
         if (keepAliveReceiver == null) {
             keepAliveReceiver = new KeepAliveReceiver();
+            keepAliveReceiver.setAlarm(this);
+        } else {
             keepAliveReceiver.setAlarm(this);
         }
     }
 
 
-    public void stopKeepAliveService() {
-        if (keepAliveReceiver != null)
+    public synchronized void stopKeepAliveService() {
+        if (keepAliveReceiver != null) {
             keepAliveReceiver.cancelAlarm(this);
+            keepAliveReceiver = null;
+        }
     }
-
 }

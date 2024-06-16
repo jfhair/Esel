@@ -26,6 +26,7 @@ import esel.esel.esel.util.EselLog;
 import esel.esel.esel.util.LocalBroadcaster;
 import esel.esel.esel.util.SP;
 import esel.esel.esel.util.ToastUtils;
+import retrofit2.Call;
 
 /**
  * Created by adrian on 04/08/17.
@@ -46,10 +47,16 @@ public class ReadReceiver extends BroadcastReceiver {
         PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Esel:ReadReceiver:Broadcast");//Boradcast
         wl.acquire();
 
-        EselLog.LogV(TAG,"onReceive called");
+        EselLog.LogV(TAG, "onReceive called");
         setAlarm(Esel.getsInstance());
 
+        CallBroadcast(context);
 
+        wl.release();
+
+    }
+
+    public void CallBroadcast(Context context){
         int sync = 8;
         try {
 
@@ -93,8 +100,11 @@ public class ReadReceiver extends BroadcastReceiver {
             FullSync(context,sync);
         }
 
+        boolean use_esdms = SP.getBoolean("use_esdms",false);
+        if(use_esdms){
+            EsNowDatareader.updateLogin();
+        }
 
-        wl.release();
     }
 
     public void FullSync(Context context, int syncHours){
@@ -216,7 +226,7 @@ public class ReadReceiver extends BroadcastReceiver {
 
     }
 
-    public int broadcastData(Context context, long lastReadingTime, boolean smoothEnabled) {
+    public int broadcastData(Context context, long lastReadingTime, boolean is_continuous_run) {
         int result = 0;
         try {
 
@@ -227,7 +237,7 @@ public class ReadReceiver extends BroadcastReceiver {
             long updatedReadingTime = lastReadingTime;
 
             boolean use_patched_es = SP.getBoolean("use_patched_es", true);
-            boolean use_esdms = SP.getBoolean("use_esdms",false);
+
 
             do {
                 lastReadingTime = updatedReadingTime;
@@ -254,9 +264,6 @@ public class ReadReceiver extends BroadcastReceiver {
                     }
                 }else {
                     boolean read_from_nl = true;
-                    if(use_esdms){
-                        EsNowDatareader.updateLogin();
-                    }
                     if(read_from_nl){
                         valueArray = EsNotificationListener.getData(size,lastReadingTime);
                     }
@@ -266,7 +273,7 @@ public class ReadReceiver extends BroadcastReceiver {
                     return result;
                 }
 
-                result +=  ProcesssValues(smoothEnabled,valueArray);
+                result +=  ProcesssValues(is_continuous_run,valueArray);
 
                 updatedReadingTime = SP.getLong("lastReadingTime", lastReadingTime);
             } while (updatedReadingTime != lastReadingTime);
@@ -285,7 +292,7 @@ public class ReadReceiver extends BroadcastReceiver {
         return result;
     }
 
-    private int ProcesssValues( boolean smoothEnabled, List<SGV> valueArray) {
+    private int ProcesssValues( boolean is_continuous_run, List<SGV> valueArray) {
         int result = 0;
 
         long currentTime = System.currentTimeMillis();
@@ -317,16 +324,10 @@ public class ReadReceiver extends BroadcastReceiver {
 
                 if (sgv.value >= 39 /*&& oldValue >= 39*/) { //check  for old value to ignore first 5 min
                     //ToastUtils.makeToast(sgv.toString());
-                    if(smoothEnabled) {
+                    if(is_continuous_run) {
                         boolean enable_smooth = SP.getBoolean("smooth_data", false) && !hasTimeGap;
                         sgv.smooth(oldValue, enable_smooth);
                     }
-
-//                    if(SP.getBoolean("smooth_data",false) && smoothEnabled){
-//                        sgv.smooth(oldValue,hasTimeGap);
-//                    }else {
-//                        sgv.smooth(oldValue,true); //
-//                    }
 
                     double slopeByMinute = 0d;
                     if (oldTime != sgvTime) {
@@ -338,7 +339,7 @@ public class ReadReceiver extends BroadcastReceiver {
 
                     try {
                         if (!suppressBroadcast) {
-                            LocalBroadcaster.broadcast(sgv);
+                            LocalBroadcaster.broadcast(sgv,is_continuous_run);
                         } else {
                             LocalBroadcaster.addSgvEntry(output, sgv);
                         }

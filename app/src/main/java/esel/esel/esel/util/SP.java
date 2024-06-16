@@ -11,7 +11,7 @@ import esel.esel.esel.Esel;
  */
 
 public class SP {
-    static SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(Esel.getsInstance().getApplicationContext());
+    static public SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(Esel.getsInstance().getApplicationContext());
 
     static public boolean contains(String key) {
         return sharedPreferences.contains(key);
