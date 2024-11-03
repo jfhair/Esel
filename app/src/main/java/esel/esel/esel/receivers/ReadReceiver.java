@@ -44,7 +44,7 @@ public class ReadReceiver extends BroadcastReceiver {
     @Override
     public synchronized void onReceive(Context context, Intent intent) {
         PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-        PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Esel:ReadReceiver:Broadcast");//Boradcast
+        PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Esel:ReadReceiver:Broadcast");//Broadcast
         wl.acquire();
 
         EselLog.LogV(TAG, "onReceive called");
