@@ -21,3 +21,9 @@
 * Companion Mode: ESEL can read CGM values from the notifications provided by the Eversense app
 * Access to [eversensedms.com](https://www.eversensedms.com/) to fill missing data
 * Fixes for smoothing and calculation of direction
+
+# Version 3.0.2
+* Changed synchronization of datareader to one common sync
+
+# Version 3.0.3
+* For notification lisener: added support for com.senseonics.eversense365.us and generic "com.senseonics."
