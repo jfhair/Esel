@@ -27,3 +27,4 @@
 
 # Version 3.0.3
 * For notification lisener: added support for com.senseonics.eversense365.us and generic "com.senseonics."
+
