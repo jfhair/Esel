@@ -73,6 +73,8 @@ public class MainActivity extends MenuActivity {
                         Esel.getsInstance().stopKeepAliveService();
                         EselLog.LogV(TAG, "STOP patched_es keepAlive recievers");
                     }
+                } else if (key.equals("esdms_us") || key.equals("use_esdms") ) {
+                    SP.putString("esnow_token", "");
                 }
             }
         };

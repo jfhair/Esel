@@ -31,8 +31,12 @@ public final class EsNowDatareader {
     static final  String grant_type = "password";
     static final  String client_id = "eversenseMMAAndroid";
     static final  String client_secret = "6ksPx#]~wQ3U";
-    static final String BASE_AUTH_URL = "https://ousiamapialpha.eversensedms.com/connect/";
-    static final String BASE_URL = "https://ousalphaapiservices.eversensedms.com/";
+    private String BASE_AUTH_URL = "https://ousiamapialpha.eversensedms.com/connect/";
+    private String BASE_URL = "https://ousalphaapiservices.eversensedms.com/";
+    static final String BASE_AUTH_URL_US = "https://apiservice.eversensedms.com/";
+    static final String BASE_URL_US = "https://apiservice.eversensedms.com/";
+    static final String BASE_AUTH_URL_OUS = "https://ousiamapialpha.eversensedms.com/connect/";
+    static final String BASE_URL_OUS = "https://ousalphaapiservices.eversensedms.com/";
     private static DateTimeFormatter dateformat = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
     private static ZoneId zoneId = ZoneId.systemDefault();
 
@@ -55,6 +59,14 @@ public final class EsNowDatareader {
         username = SP.getString("es_username","");
         password =SP.getString("es_password","");
 
+        BASE_AUTH_URL = BASE_AUTH_URL_OUS;
+        BASE_URL = BASE_URL_OUS;
+
+        if(SP.getBoolean("esdms_us",false)){
+            BASE_AUTH_URL = BASE_AUTH_URL_US;
+            BASE_URL = BASE_URL_US;
+        }
+
         bearer_token = SP.getString("esnow_token", bearer_token);
         token_expires = SP.getLong("es_now_token_expire", token_expires);
         userId = SP.getInt("esnow_userId", userId);
@@ -75,6 +87,7 @@ public final class EsNowDatareader {
 
     private boolean tokenHasExpired(){
         long currentTime = System.currentTimeMillis();
+        //return true;
         return  currentTime > token_expires;
     }
 

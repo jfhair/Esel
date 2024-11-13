@@ -20,6 +20,12 @@
         android:summary="The password used for login in the Eversense App" />
 
     <SwitchPreference
+        android:key="esdms_us"
+        android:title="Use US server us.eversensedms.com for backfill"
+        android:defaultValue="false"
+        android:summary="Get data from us.eversensedms isntead of the global server." />
+
+    <SwitchPreference
         android:key="use_patched_es"
         android:title="Get data from patched Eversense App"
         android:defaultValue="false"
@@ -36,7 +42,6 @@
         android:title="Auto sync interval"
         android:defaultValue="3"
         android:summary="Automatically do a full sync in this interval. 0 = no auto sync"/>
-
 
     <SwitchPreference
         android:key="send_to_AAPS"
