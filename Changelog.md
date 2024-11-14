@@ -28,3 +28,5 @@
 # Version 3.0.3
 * For notification lisener: added support for com.senseonics.eversense365.us and generic "com.senseonics."
 
+# Version 3.0.4
+* Added support for us.eversensedms.com for backfilling data from Eversense server
