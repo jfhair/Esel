@@ -8,3 +8,9 @@
 /captures
 .externalNativeBuild
 .idea/*
+/.idea
+.idea/modules.xml
+.idea/misc.xml
+.idea/gradle.xml
+.idea/compiler.xml
+/app

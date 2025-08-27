@@ -30,7 +30,6 @@ public class LocalBroadcaster {
 
     public static void broadcast(SGV sgv, boolean log) {
         try {
-
             int timeShift = SP.getInt("shift_days",0);
             if(timeShift > 0){
                 timeShift = timeShift * 24 * 60 * 60 * 1000; //days to ms

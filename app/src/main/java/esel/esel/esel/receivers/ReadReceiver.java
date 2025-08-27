@@ -237,8 +237,6 @@ public class ReadReceiver extends BroadcastReceiver {
             long updatedReadingTime = lastReadingTime;
 
             boolean use_patched_es = SP.getBoolean("use_patched_es", true);
-
-
             do {
                 lastReadingTime = updatedReadingTime;
 
@@ -249,7 +247,7 @@ public class ReadReceiver extends BroadcastReceiver {
                     //if(currentTime - lastReadingTime > 30000) {
                         int bg = SP.getInt("bg_value", 120);
                         SGV sgv = new SGV(bg, currentTime, 1);
-                    valueArray.add(new SGV(bg, lastReadingTime, 1));
+                        valueArray.add(new SGV(bg, lastReadingTime, 1));
                         valueArray.add(new SGV(bg, currentTime, 2));
 
                     //}
@@ -296,23 +294,30 @@ public class ReadReceiver extends BroadcastReceiver {
         int result = 0;
 
         long currentTime = System.currentTimeMillis();
+        long fiveMin = 5 * 60 * 1000L;
+        long fourMin = 4 * 60 * 1000L;
 
         for (int i = 0; i < valueArray.size(); i++) {
             SGV sgv = valueArray.get(i);
             long oldTime = SP.getLong("lastReadingTime", -1L);
 
             boolean newValue = oldTime != sgv.timestamp;
-            boolean futureValue = false;
+            boolean acceptValue = true;
 
             if(sgv.timestamp - currentTime > (60 * 1000)){
                 //sgv is from future
                 long shiftValue = sgv.timestamp - currentTime;
                 float sec = shiftValue/1000f;
                 EselLog.LogW(TAG,"broadcastData called, value is in future by [sec] " + sec);
-                futureValue = true;
+                acceptValue = false;
             }
 
-            if (newValue && !futureValue) {
+            if(sgv.timestamp - oldTime < fourMin){
+                EselLog.LogW(TAG,"broadcastData called, value ignored as it is not older than 4 min: " + sgv.value + ", timestamp: " + sgv.timestamp);
+                acceptValue = false;
+            }
+
+            if (newValue && acceptValue) {
                 //if (!futureValue) {
                 int oldValue = sgv.value;
 
