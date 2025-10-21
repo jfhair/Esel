@@ -312,10 +312,12 @@ public class ReadReceiver extends BroadcastReceiver {
                 acceptValue = false;
             }
 
+            /*
             if(sgv.timestamp - oldTime < fourMin){
                 EselLog.LogW(TAG,"broadcastData called, value ignored as it is not older than 4 min: " + sgv.value + ", timestamp: " + sgv.timestamp);
                 acceptValue = false;
             }
+            */
 
             if (newValue && acceptValue) {
                 //if (!futureValue) {
